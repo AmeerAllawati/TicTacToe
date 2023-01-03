@@ -55,8 +55,11 @@ public class stairCaseAlgorithm {
         // TODO Auto-generated method stub
         int temp_next_row = rowIndex;
         int temp_next_column = columnIndex;
-        
-        temp_next_row = (rowIndex-1)%3;
+        if (temp_next_row >= 0) {
+            temp_next_row = (rowIndex-1)%3;
+        } else if {
+            
+        }
         temp_next_column = (columnIndex+1)%3;
         
         return new int[] {temp_next_row, temp_next_column};
