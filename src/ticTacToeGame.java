@@ -1,11 +1,12 @@
 import java.awt.datatransfer.Clipboard;
 import java.lang.Math;
 import java.io.*;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class ticTacToeGame {
     /** 
-     * This class is made for a tic tac toe game, where two plyaers play and choose their own symbols.
+     * This class is made for a tic tac toe game, where two players play and choose their own symbols.
      */
 
     static public char[][] board = { { '1', '2', '3' }, { '4', '5', '6' }, { '7', '8', '9' } };
@@ -16,15 +17,72 @@ public class ticTacToeGame {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-
-        symbol_choosing();
+        boolean gameStarted = checkIfGameExists();
+        if (!gameStarted) {
+            loadGame();
+        } else {
+            symbol_choosing();
+        }
+        
         while (!game_ended()) {
             print_board();
             place = ask_move(player);
             add_board_move(player, place);
             change_player();
+            saveGameState();
         }
 
+    }
+
+    private static void loadGame() {
+        // TODO Auto-generated method stub
+        File gameState = new File("data/gameState.csv");
+        
+        try {
+            Scanner stateScanner = new Scanner(gameState);
+            player = Integer.parseInt(stateScanner.nextLine());
+            player1Symbol = stateScanner.nextLine().charAt(0);
+            player2Symbol = stateScanner.nextLine().charAt(0);
+            
+            for(int i = 0; i < board.length; ++i) {
+                for(int j = 0; j < board[0].length; ++j) {
+                    board[i][j] = stateScanner.nextLine().charAt(0);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private static boolean checkIfGameExists() {
+        // TODO Auto-generated method stub
+        File gameState = new File("data/gameState.csv");
+        
+        if (gameState.exists()) {
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
+
+    public static void saveGameState() {
+        // TODO Auto-generated method stub
+        try {
+            FileWriter gameState = new FileWriter("data/gameState.csv");
+            gameState.write(player + "\n");
+            gameState.write(player1Symbol + "\n");
+            gameState.write(player2Symbol + "\n");
+            for(int i = 0; i < board.length; ++i) {
+                for(int j = 0; j < board[0].length; ++j) {
+                    gameState.write(board[i][j] + "\n");
+                }
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     private static void symbol_choosing() {
